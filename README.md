@@ -1,9 +1,9 @@
-# Naruka Wealth - Institutional Alpha Dashboard
+# Naruka Wealth - Institutional Alpha Dashboard (Open Access)
 Website: https://rahul-naruka.github.io/stock/
 AMFI Registered Mutual Fund Distributor (ARN 277301)
 
-## Features Included in Pro Version:
-- Secure PIN Authentication (hashed with 1991 PIN, zero plain-text exposure)
+## Overview
+This version has the PIN login gate completely removed for direct public access while retaining all professional features:
 - Daily post-market auto-sync & manual refresh
 - Trailing CAGRs (1Y, 3Y, 5Y, 10Y)
 - 21-Year Backtest Simulation (2005 - 2026) vs Nifty 500 TRI Benchmark
