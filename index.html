@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naruka Wealth | Daily Auto-Updating Alpha Dashboard & Stock Performance</title>
+    <title>Naruka Wealth | Institutional Alpha Portfolio & Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,23 +11,47 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+    <!-- Secure PIN Login Modal -->
+    <div id="pinModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 mx-auto flex items-center justify-center font-bold text-white text-2xl shadow-lg shadow-blue-500/20">NW</div>
+            <div>
+                <h2 class="text-xl font-bold text-white">Naruka Wealth Portal</h2>
+                <p class="text-xs text-slate-400 mt-1">Enter your secure PIN to access the Institutional Alpha Dashboard.</p>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="pinInput" placeholder="••••" maxlength="6" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-white text-3xl tracking-widest font-bold w-full focus:outline-none focus:border-blue-500 transition" required autofocus>
+                </div>
+                <div id="pinError" class="text-xs text-rose-400 hidden">Invalid PIN. Please try again.</div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-blue-600/30 text-sm">
+                    Unlock Dashboard
+                </button>
+            </form>
+            <p class="text-[10px] text-slate-500">AMFI Registered MFD (ARN-277301) | Rahul Naruka</p>
+        </div>
+    </div>
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-blue-500/20">NW</div>
                 <div>
-                    <h1 class="font-bold text-base sm:text-lg text-white tracking-wide">Naruka Wealth <span class="text-xs px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full font-medium ml-2">Market Close Sync v5.0</span></h1>
+                    <h1 class="font-bold text-base sm:text-lg text-white tracking-wide">Naruka Wealth <span class="text-xs px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full font-medium ml-2">Market Close Sync v7.0</span></h1>
                     <p class="text-xs text-slate-400">All-India Institutional Alpha Strategy (AMFI ARN-277301)</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <div id="syncBadge" class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+                <div id="syncBadge" class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg font-medium hidden sm:flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Post-Market Status: Synced</span>
                 </div>
+                <button onclick="lockDashboard()" class="text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                    Lock Session
+                </button>
             </div>
         </div>
     </header>
@@ -48,22 +72,22 @@
 
         <!-- Metric Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-slate-700 transition">
                 <p class="text-xs font-medium text-slate-400">Target Annualized Return (CAGR)</p>
                 <div class="text-3xl font-bold text-emerald-400 mt-2">20% - 25%</div>
                 <p class="text-xs text-slate-500 mt-1">vs Nifty 500 Baseline (~12%)</p>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-slate-700 transition">
                 <p class="text-xs font-medium text-slate-400">Historical Max Drawdown (2005-2026)</p>
                 <div class="text-3xl font-bold text-amber-400 mt-2">-28.4%</div>
                 <p class="text-xs text-slate-500 mt-1">Nifty 500 Max DD: -53.2% (2008)</p>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-slate-700 transition">
                 <p class="text-xs font-medium text-slate-400">Portfolio Sharpe Ratio</p>
                 <div class="text-3xl font-bold text-blue-400 mt-2">1.42</div>
                 <p class="text-xs text-slate-500 mt-1">Risk-Adjusted Outperformance</p>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-slate-700 transition">
                 <p class="text-xs font-medium text-slate-400">Governance & Safety Filter</p>
                 <div class="text-3xl font-bold text-indigo-400 mt-2">0% Pledged</div>
                 <p class="text-xs text-slate-500 mt-1">Strict Zero Promoter Pledging</p>
@@ -230,12 +254,53 @@
     <footer class="bg-slate-900 border-t border-slate-800 mt-16 py-8">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
             <p>Naruka Wealth | AMFI Registered Mutual Fund Distributor (ARN 277301)</p>
-            <p>Designed for quantitative equity research and long-term wealth compounding. Daily post-market sync enabled.</p>
+            <p>Designed for quantitative equity research and long-term wealth compounding. Secure PIN authentication active.</p>
         </div>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic with Secure PIN Authentication -->
     <script>
+        // SHA-256 hash for PIN '1991' (b318d184cf43d2ff9809618b76c11db333b2c15904fc4e792e3d939ef2a2f64f)
+        const TARGET_PIN_HASH = "b318d184cf43d2ff9809618b76c11db333b2c15904fc4e792e3d939ef2a2f64f";
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const pin = document.getElementById('pinInput').value;
+            const hashedInput = await sha256(pin);
+            
+            if (hashedInput === TARGET_PIN_HASH) {
+                document.getElementById('pinModal').classList.add('hidden');
+                document.getElementById('pinError').classList.add('hidden');
+                sessionStorage.setItem('naruka_auth', 'true');
+            } else {
+                document.getElementById('pinError').classList.remove('hidden');
+                document.getElementById('pinInput').value = '';
+            }
+        }
+
+        function lockDashboard() {
+            sessionStorage.removeItem('naruka_auth');
+            document.getElementById('pinModal').classList.remove('hidden');
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pinInput').focus();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const isAuthed = sessionStorage.getItem('naruka_auth');
+            if (isAuthed === 'true') {
+                document.getElementById('pinModal').classList.add('hidden');
+            } else {
+                document.getElementById('pinModal').classList.remove('hidden');
+            }
+        });
+
         const portfolioData = [
             { ticker: "TRENT", name: "Trent Ltd", price: 7420.50, change: 2.35, weight: 10.0, score: 95, catalyst: "Zero Pledging | 92% OCF" },
             { ticker: "DIXON", name: "Dixon Technologies Ltd", price: 14850.00, change: 1.84, weight: 10.0, score: 95, catalyst: "Zero Pledging | PLI Growth" },
